@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/userclass/shareclass.dart';
 import "dart:io";
-
-
 import 'package:image_picker/image_picker.dart';
+
 class DataBase{
   final FirebaseAuth auth=FirebaseAuth.instance;
   final FirebaseFirestore store=FirebaseFirestore.instance;
-  
-  Future<String> kayit(String email,String password,String kullaniciAdi,String isim) async{
+
+  Future<String> userkayit(String email,String password,String kullaniciAdi,String isim) async{
     try {
       UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -82,10 +82,10 @@ class DataBase{
     }
   }
   
-  Future<String> gonderiEkleGaleri(String id) async{
+  Future<String> gonderiEkleGaleriKamera(String id,{bool galeriMi=true}) async{
     try{
     File yuklenecekDosya;
-    var alinanDosya=await ImagePicker().pickImage(source: ImageSource.gallery);
+    var alinanDosya=await ImagePicker().pickImage(source: galeriMi==true? ImageSource.gallery:ImageSource.camera);
     if(alinanDosya== null){
       return "";
     }
@@ -94,8 +94,8 @@ class DataBase{
       ListResult result=await FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").listAll();
       int dataLength=result.items.length+1;
       var data=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$dataLength.jpg");
-      var gorev=data.putFile(yuklenecekDosya);
-      var url=data.getDownloadURL();
+      await data.putFile(yuklenecekDosya);
+      var url=await data.getDownloadURL();
       debugPrint(url.toString());
       return url;
     }   
@@ -104,35 +104,25 @@ class DataBase{
       return "Hata";
     }
   }
-
-  Future<String> gonderiEkleKamera(String id) async{
-    FirebaseStorage stor=FirebaseStorage.instance;
+  
+  Future<String> paylasimYap(String id,File imgFile) async{
     try{
-    File yuklenecekDosya;
-    var alinanDosya=await ImagePicker().pickImage(source: ImageSource.camera);
-    if(alinanDosya== null){
+    ListResult result=await FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").listAll();
+    int dataLength=result.items.length+1;
+    var data=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$dataLength.jpg");
+    await data.putFile(imgFile);
+    var url= await data.getDownloadURL();
+    return url;
+    }
+    catch(e){
       return "";
     }
-    else{
-      yuklenecekDosya=File(alinanDosya.path);
-      ListResult result=await stor.ref().child("profilresimleri").child(id).child("Paylasimlar").listAll();
-      int dataLength=result.items.length+1;
-      var data=stor.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$dataLength.jpg");
-      var gorev=data.putFile(yuklenecekDosya);
-      var url=data.getDownloadURL();
-      debugPrint(url.toString());
-      return url;
-    }   
-    }
-    catch(e){
-      return "Hata";
-    }
   }
 
-  Future<String> veriEkleme(String id,String KullaniciAdi,String IsimSoyisim,String yeniOzellik) async{
+  Future<String> veriEkleme(String id,String kullaniciAdi,String isimSoyisim,String yeniOzellik) async{
     try{
 
-      await store.doc("Users/$id").set({"KullaniciAdi": KullaniciAdi,"IsimSoyisim": IsimSoyisim,"GenelOzellikler":yeniOzellik},SetOptions(merge: true));
+      await store.doc("Users/$id").set({"KullaniciAdi": kullaniciAdi,"IsimSoyisim": isimSoyisim,"GenelOzellikler":yeniOzellik},SetOptions(merge: true));
       return "T";
     }
     catch(e){
@@ -147,10 +137,10 @@ class DataBase{
     await auth.signOut();
   }
 
-  Future<String> preofilResmiKamera(String id) async{
+  Future<String> preofilResmiGaleriKamera(String id,{bool galeriMi=true}) async{
     try{
       File yuklenecekDosya;
-      var alinanDosya=await ImagePicker().pickImage(source: ImageSource.camera);
+      var alinanDosya=await ImagePicker().pickImage(source: galeriMi==true? ImageSource.gallery:ImageSource.camera);
       if(alinanDosya==null){
         return "";
       }
@@ -158,7 +148,7 @@ class DataBase{
            yuklenecekDosya=File(alinanDosya.path);
           var data=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("profilresim.png");
           var url=await data.getDownloadURL();
-          var gorev=data.putFile(yuklenecekDosya);
+          await data.putFile(yuklenecekDosya);
           return url;
       }
     }
@@ -168,27 +158,6 @@ class DataBase{
     }
   }
 
-  Future<String> profilResmiGaleri(String id) async{
-    try{
-    File yuklenecekDosya;
-    var alinanDosya=await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(alinanDosya== null){
-      return "";
-    }
-    else{
-      yuklenecekDosya=File(alinanDosya.path);
-      var data=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Profil").child("1.jpg");
-      var gorev=data..putFile(yuklenecekDosya);
-      var url=data.getDownloadURL();
-      debugPrint(url.toString());
-      return url;
-    }   
-    }
-    catch(e){
-      return "Hata";
-    }
-  }
-  
   Future<String> takeUserPhoto(String id) async{
     try{
       var ref=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Profil").child("1.jpg");
@@ -244,21 +213,44 @@ class DataBase{
         return "";
       }
     }
- 
-  Future<ListResult> sonProva(String id) async {
-    ListResult result=await FirebaseStorage.instance.ref('profilresimleri').child(id).child("Hikayeler").listAll();
-    return result;
-  }
-
-  Future<String> getImagePathForList(String id,String imgName) async{
-     try{
-      var ref=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Hikayeler").child(imgName);
-      String getDownloadURL= await ref.getDownloadURL();
-      return getDownloadURL;
+  
+  Future paylasimGaleriCamera({bool gallery=true}) async{
+    try{
+         var alinanDosya=await ImagePicker().pickImage(source: gallery==true? ImageSource.gallery:ImageSource.camera);
+         if(alinanDosya!.path!=null){
+             return File(alinanDosya.path);
+         }  
+         else{
+          debugPrint("Kod Elsede");
+          return "";
+         }
     }
     catch(e){
-      return "";
+     return "";
     }
   }
+
+  Future historySave(String id,{bool galeriMi=true}) async{
+    try{
+    File yuklenecekDosya;
+    var alinanDosya=await ImagePicker().pickImage(source: galeriMi==true? ImageSource.gallery:ImageSource.camera);
+    if(alinanDosya== null){
+      return "";
+    }
+    else{
+      yuklenecekDosya=File(alinanDosya.path);
+      ListResult result=await FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Hikayeler").listAll();
+      int dataLength=result.items.length+1;
+      var data=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$dataLength.jpg");
+      await data.putFile(yuklenecekDosya);
+      var url=await data.getDownloadURL();
+      return url;
+    }   
+    }
+    catch(e){
+      return "Hata";
+    }
+  }
+
 
 }

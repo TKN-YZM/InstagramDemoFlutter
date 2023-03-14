@@ -10,7 +10,9 @@ class HistoryPicturePage extends StatefulWidget {
   final String imagePath;
   final UserClass myUser;
   final OutherUserClass outherUser;
-  const HistoryPicturePage({required this.myUser,required this.outherUser,required this.imagePath,super.key});
+  final bool networkControl;
+  final bool thisMainUser;
+  const HistoryPicturePage({required this.myUser,required this.outherUser,required this.imagePath,required this.networkControl,super.key,required this.thisMainUser});
   @override
   State<HistoryPicturePage> createState() => _HistoryPicturePageState();
 }
@@ -19,46 +21,35 @@ class _HistoryPicturePageState extends State<HistoryPicturePage> {
   int sayi=0;
   late PageController controller;
   late PaletteGenerator generator;
-  Color arkaplan_rengi=Colors.white30;
+  Color arkaplanRengi=Colors.white30;
   @override
   void initState() {
     super.initState();
     controller=PageController(initialPage: 2);
+    colorState(widget.imagePath,flagState: widget.networkControl);
   }
   @override
   Widget build(BuildContext context) {
-    Size size=MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: arkaplan_rengi,
+      backgroundColor: arkaplanRengi,
       body: Hero(
-        tag: "1",
+        tag: "",
         child: PageView(
-         onPageChanged: (value) {
-           debugPrint(value.toString());
-           if(value==1){
-            ColorState("assets/batim1.png");
-           }
-           else if(value==0){
-            ColorState("assets/blue.jpg");
-           }
-           else {
-            ColorState("assets/model3.jpg");
-           }
+         onPageChanged: (value) {          
           },
          reverse: true,
          allowImplicitScrolling: true,
           controller: controller,
           children: [  
-            columnState(context,"assets/blue.jpg","tuna_bol",flag: true,pictureflag: true,picturePath: "assets/bluemodel.jpg", () => goProfile(widget.outherUser,), ),
-            columnState(context,"assets/modelgrid1.jpg","mr_robo",flag: true,pictureflag: true,picturePath: "assets/modelgrid1.jpg",()=> goProfile(widget.outherUser)),
-            columnState(context,widget.imagePath,widget.outherUser.kullaniciAdi,() => goProfile(widget.outherUser,flag: true)),
+            columnState(context,widget.imagePath,widget.outherUser.kullaniciAdi,() => goProfile(widget.outherUser),pictureflag: widget.networkControl,flag: widget.networkControl),
           ],
         )
       ),
     );
   }
 
-  Widget columnState(BuildContext context,String imgPath,String userName,Function() onTap,{bool flag=false,bool pictureflag=false,String picturePath="assets/model1.jpg"}) {
+  Widget columnState(BuildContext context,String imgPath,String userName,Function() onTap,{bool flag=true,bool pictureflag=true}) {
     return SingleChildScrollView(
       child: InkWell(
         onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMainApp(myUser: widget.myUser))),
@@ -69,8 +60,8 @@ class _HistoryPicturePageState extends State<HistoryPicturePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                InkWell(
-                child: flag==false? _futureBuilder(widget.outherUser.ID):myHistory(picturePath),
+                InkWell( //user picture
+                child: flag==true? _futureBuilder(widget.outherUser.ID):myHistory(imgPath),
                 onTap: onTap,),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 40,right: 40),
@@ -100,7 +91,7 @@ class _HistoryPicturePageState extends State<HistoryPicturePage> {
           height: 460,//size.height,
           width: 410,//size.width,
           decoration: BoxDecoration(
-          image: pictureflag==false?
+          image: pictureflag==true?
            DecorationImage(
             image: NetworkImage(widget.imagePath),fit: BoxFit.cover
           ):
@@ -146,7 +137,7 @@ class _HistoryPicturePageState extends State<HistoryPicturePage> {
       future: DataBase().takeUserPhoto(userID),
       builder: ((context, snapshot) {
       if(snapshot.connectionState==ConnectionState.done && snapshot.hasData){
-        return CirclePictureNetwork(snapshot.data.toString(),height: 50,widht: 50);
+        return circlePictureNetwork(snapshot.data.toString(),height: 50,widht: 50);
       }
       else{
       return Container();
@@ -155,25 +146,24 @@ class _HistoryPicturePageState extends State<HistoryPicturePage> {
   }
 
   Widget myHistory(String imgPath){
-    return CirclePicture(imgPath,height: 50,widht: 50);
-    //CirclePictureNetwork(snapshot.data.toString(),height: 50,widht: 50);
+    return circlePicture(imgPath,height: 50,widht: 50);
   }
   
-  void goProfile(OutherUserClass outherUser,{bool flag=false}){
-    debugPrint(flag.toString());
-    Navigator.push(context, MaterialPageRoute(builder: (context) => flag==false? 
+  void goProfile(OutherUserClass outherUser,){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => widget.thisMainUser==true? 
     MyMainApp(myUser: widget.myUser):
-    OutherUserProfile(myUser: widget.myUser, outherUser: outherUser, genelOzellik: outherUser.genelOzellik)
+    OutherUserProfile(myUser: widget.myUser, outherUser: outherUser, genelOzellik: outherUser.genelOzellik,
+    isFalseNetworkimgPath: widget.networkControl==false? widget.imagePath:"assets/model1.jpg",
+    )
     
     ));
   }
 
-  void ColorState(String imgPath) async{
-    generator=await PaletteGenerator.fromImageProvider(AssetImage(imgPath));
-    arkaplan_rengi=generator.dominantColor!.color;
+  void colorState(String imgPath,{bool flagState=true}) async{
+    generator=flagState==false? await PaletteGenerator.fromImageProvider(AssetImage(imgPath)): await PaletteGenerator.fromImageProvider(NetworkImage(imgPath));
+    arkaplanRengi=generator.dominantColor!.color;
     setState(() {
-      print(arkaplan_rengi);
+
     });
   }
-  // Color(0xff646464) ,Color(0xffaab4b1)
 }

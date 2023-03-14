@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+  //ScaffoldMessenger ile alt kısımdan mesaj çıkarma
   void showMessage(String data,context){
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data,style: const TextStyle(fontSize: 16),)));
   }
 
-  Stack CirclePicture(String pictureName,{String name="",bool hikayeKontrol=false,double widht=70,double height=70}) { //Resim,boyut,isim 
+  //Hikayelerdeki yuvarlak kullanıcı resmi ve yazısı cihazdan
+  Stack circlePicture(String pictureName,{String name="",bool hikayeKontrol=false,double widht=70,double height=70}) {
     return Stack(
       children:  [
           Padding( //hikaye resmi
@@ -16,11 +18,11 @@ import 'package:flutter/material.dart';
               ),
               width: widht,height: height),
           ),
-          hikayeKontrol==false? Container(height: 0,width: 0,):
-          Positioned(
+          hikayeKontrol==false? const SizedBox(height: 0,width: 0,):
+          const Positioned (
             top: 60,
             left: 53,
-            child: Container(height: 10,width: 10,child: const Icon(Icons.add,size: 22),)),
+            child:  SizedBox(height: 10,width: 10,child:  Icon(Icons.add,size: 22),)),
           Padding( //Yazının kordinatları
             padding: const EdgeInsets.only(top: 85,left: 18),
             child: Text(name,style: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
@@ -29,7 +31,8 @@ import 'package:flutter/material.dart';
     );
 }
 
-  Stack CirclePictureNetwork(String picturPath,{String name="",double widht=70,double height=70}){
+    //Hikayelerdeki yuvarlak kullanıcı resmi ve yazısı İnternetten 
+  Stack circlePictureNetwork(String picturPath,{String name="",double widht=70,double height=70}){
     return Stack(
       children:  [
         Padding(
@@ -49,28 +52,30 @@ import 'package:flutter/material.dart';
     );
   }
 
-  Column karePicture(Size size,String imgPath1,String imgPath2,String imgPath3) {
+
+  //Keşfet Yapısı (yan yana 2 kare ve sağında reels)
+  Column karePicture(Size size,String imgPath1,String imgPath2,String imgPath3) { 
     return Column(
       children: [    
         Row( 
           mainAxisAlignment: MainAxisAlignment.start,
-       children: [
-           const SizedBox(width: 3,),
-       Expanded(
-        flex: 1,
-        child: Container(
-          child:imgPath1==""? const Text(""):pictures(size,imgPath1),
-        ),
-      ),
-        const SizedBox(width: 3),
-       Expanded(
-        flex: 1,
-         child: Container(
-           child:imgPath2==""? const Text(""):pictures(size,imgPath2),
-             ),
-       ),
-      const SizedBox(width: 3,),
-       Expanded(
+          children: [
+            const SizedBox(width: 3,),
+            Expanded(
+              flex: 1,
+              child: Container(
+                child:imgPath1==""? const Text(""):pictures(size,imgPath1),
+              ),
+            ),
+            const SizedBox(width: 3),
+            Expanded(
+              flex: 1,
+              child: Container(
+                child:imgPath2==""? const Text(""):pictures(size,imgPath2),
+                  ),
+            ),
+            const SizedBox(width: 3,),
+            Expanded(
         flex: 1,
          child: Container(
            child: imgPath3==""? const Text(""):pictures(size,imgPath3),
@@ -82,8 +87,8 @@ import 'package:flutter/material.dart';
     );
   }
   
+  //Kare içinde resim / galeriden ya da internetten 
   Container pictures(Size size,String picturePath) => Container(height: 150,width: 130,child: picturePath==""? 
-  
   Container():Image.network(picturePath,fit: BoxFit.cover,));
 
  

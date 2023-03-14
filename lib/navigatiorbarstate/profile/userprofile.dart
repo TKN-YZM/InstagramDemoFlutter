@@ -8,7 +8,8 @@ class OutherUserProfile extends StatefulWidget {
   final OutherUserClass outherUser;
   final UserClass myUser;
   String genelOzellik;
-  OutherUserProfile ({required this.myUser ,required this.outherUser,required this.genelOzellik,super.key});
+  String isFalseNetworkimgPath="";
+  OutherUserProfile ({required this.myUser ,required this.outherUser,required this.genelOzellik,required this.isFalseNetworkimgPath,super.key});
 
   @override
   State<OutherUserProfile > createState() => _OutherUserProfile();
@@ -60,7 +61,7 @@ class _OutherUserProfile  extends State<OutherUserProfile > {
                             return Container(height: 75,width: 75,
                                 decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(40),
-                                image: const DecorationImage(image: AssetImage("assets/aperson.png"),fit: BoxFit.cover))
+                                image:  DecorationImage(image: AssetImage(widget.isFalseNetworkimgPath),fit: BoxFit.cover))
                             );
                           }
                           else{
@@ -68,8 +69,9 @@ class _OutherUserProfile  extends State<OutherUserProfile > {
                               child: Container(height: 75,width: 75,
                                   decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
-                                  image: DecorationImage(image: NetworkImage(snapshot.data!),fit: BoxFit.cover))
-                              ),
+                                  image: DecorationImage(image:  NetworkImage(snapshot.data!),fit: BoxFit.cover)
+                                  )
+                                ),
                             );
                           }
                           }
@@ -96,19 +98,21 @@ class _OutherUserProfile  extends State<OutherUserProfile > {
                 ),
                 Padding( //Açıklama kısmı PAÜ YBS
                   padding: const EdgeInsets.only(left: 21),
-                  child: Container(height: 65,width: size.width-300,child: Text(widget.outherUser.kullaniciGenelAdi+"\n"+widget.genelOzellik,style: TextStyle(fontWeight: FontWeight.w400),),),
+                  child: Container(height: 65,width: size.width-300,child: Text(widget.outherUser.kullaniciGenelAdi+"\n"+widget.genelOzellik,style: const TextStyle(fontWeight: FontWeight.w400),),),
                 ),
                 const SizedBox(height: 10),
                 profilbutton(size, context), //profil düzenleme ve - buttonu
                 Padding( //butonun altındaki paylaşılan hikayeleren 
                   padding: const EdgeInsets.only(left: 20,right: 10),
-                  child: Row(children: [CirclePicture("assets/bluemodel.jpg",name: "MyFoto"),CirclePicture("assets/batim1.png",name: "SunRise"),CirclePicture("assets/me.png",name: "ItsMe")]),
+                  child: Row(children: [circlePicture("assets/bluemodel.jpg",name: "MyFoto"),circlePicture("assets/batim1.png",name: "SunRise")]),
                 ),
                 const SizedBox(height: 5,),
                 Row( //2 icon kare ve add person
                   children: [
-                    Expanded(child: Center(child: IconButton(icon:Icon(Icons.border_all_sharp),onPressed: () {
-                    },)),flex: 2,),
+                    Expanded(
+                      flex: 2,
+                      child: Center(child: IconButton(icon: const Icon(Icons.border_all_sharp),onPressed: () {
+                    },)),),
                     Expanded(
                       flex: 2,
                       child: Center(child: IconButton(icon: const Icon(Icons.person_add_outlined),
@@ -163,7 +167,7 @@ class _OutherUserProfile  extends State<OutherUserProfile > {
 
   Widget _paylasimKontrol(List data,size){
      debugPrint(data.length.toString());
-     switch(data.length){ 
+       switch(data.length){ 
       case 1:return karePicture(size,data[0] , "", ""); 
       case 2:return karePicture(size,data[0] , data[1], "");
       case 3:return karePicture(size, data[0], data[1], data[2]);
@@ -171,17 +175,18 @@ class _OutherUserProfile  extends State<OutherUserProfile > {
       case 5:return Column(children: [karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1],data[0], "")],);    
       case 6:return Column(children: [karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2],data[1], data[0])],);
       case 7:return Column(children: [karePicture(size, data[6], data[5], data[4]),karePicture(size, data[3],data[2], data[1]),karePicture(size, data[0], "", "")],);
-      case 7:return Column(children: [karePicture(size, data[7], data[6], data[5]),karePicture(size, data[4],data[3], data[2]),karePicture(size, data[1], data[0], "")],);
-      case 8:return Column(children: [karePicture(size, data[8], data[7], data[6]),karePicture(size, data[5],data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
-      case 9:return Column(children: [karePicture(size, data[9], data[8], data[7]),karePicture(size, data[6],data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, data[0], "", "")],);
-      case 10:return Column(children: [karePicture(size, data[10], data[9], data[8]),karePicture(size, data[7],data[6], data[5]),karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1], data[0], "")],);
-      case 11:return Column(children: [karePicture(size, data[11], data[10], data[9]),karePicture(size, data[8],data[7], data[6]),karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 8:return Column(children: [karePicture(size, data[7], data[6], data[5]),karePicture(size, data[4],data[3], data[2]),karePicture(size, data[1], data[0], "")],);
+      case 9:return Column(children: [karePicture(size, data[8], data[7], data[6]),karePicture(size, data[5],data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 10:return Column(children: [karePicture(size, data[9], data[8], data[7]),karePicture(size, data[6],data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, data[0], "", "")],);
+      case 11:return Column(children: [karePicture(size, data[10], data[9], data[8]),karePicture(size, data[7],data[6], data[5]),karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1], data[0], "")],);
+      case 12:return Column(children: [karePicture(size, data[11], data[10], data[9]),karePicture(size, data[8],data[7], data[6]),karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 13:return Column(children: [karePicture(size, data[12], data[11], data[10]),karePicture(size, data[9],data[8], data[7]),karePicture(size, data[6], data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, "", "", "")],);
 
       default:return const Center(child: Text("Paylasim Yap",style: TextStyle(fontSize:18),));
      }
 
-  }
-
+     }
+  
   Row profilbutton(Size size, BuildContext context) {
     return Row( //profili düzenle buton
           children: [
@@ -254,10 +259,6 @@ class _OutherUserProfile  extends State<OutherUserProfile > {
           //controller: scrollController,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              
-             
-            ],
           ),
         ));
   }));

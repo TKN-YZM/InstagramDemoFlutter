@@ -54,17 +54,17 @@ class _mianPageState extends State<mianPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(
+          const Padding( //Instagram yazisi
             padding:  EdgeInsets.only(bottom: 20),
             child: Text("Instagram",style: TextStyle(fontSize: 50,fontFamily: "mainfont"),),
           ),        
-          textField("Telefon numarası veya eposta", epostaController),
-          textField("Adı Soyadı", adiController),
-          textField("Kullanıcı Adı", klncadiController),
-          textField("Sifre", sifreController),
-          Row(
+          textFieldCreate("Telefon numarası veya eposta", epostaController), //Eposta
+          textFieldCreate("Adı Soyadı", adiController), //Ad Soyad
+          textFieldCreate("Kullanıcı Adı", klncadiController), //Kullanici Adi
+          textFieldCreate("Sifre", sifreController), //Sifre
+          Row( //CheckBox  ve "Sözleşmeyi kabul ediyorum"
             children: [
-            Container(
+            Container( //CheckBox (Okudum onaylıyorum)
             child: Checkbox(value: checkBoxState,onChanged: (value) {
               setState(() {
                 checkBoxState=value!;
@@ -73,8 +73,8 @@ class _mianPageState extends State<mianPage> {
             const Text("Sözleşmeyi kabul ediyorum"),
             ],
           ),
-          buttonCreate(context,"Kayıt Ol"),
-          TextButton(onPressed: (){
+          buttonCreate(context,"Kayıt Ol"),//kayit ol button func
+          TextButton(onPressed: (){ //Zaten hesabım var
             Navigator.push(context, MaterialPageRoute(builder: (context) => const UserLoginMain()));
           }, child: const Text("Zaten hesabım var"))
         ],
@@ -84,32 +84,32 @@ class _mianPageState extends State<mianPage> {
 
   Container buttonCreate(BuildContext context,String title) {
     return Container(
-          width: MediaQuery.of(context).size.width-45,
-          child: ElevatedButton(onPressed: (){
-            String IsimSoyisim=adiController.text;
-            String email=epostaController.text;
-            String sifre=sifreController.text;
-            String kullaniciAdi=klncadiController.text;
-            dataBase.kayit(email,sifre,kullaniciAdi,IsimSoyisim).then((value) => {
-               if(value.length==28){
-                  showMessage("Kayıt İşlemleri Başarıyla Gerçekleşti", context),
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const UserLogin()))
-              }
-              else{
-                showMessage(value, context)
-              }
-            });
-          }, child:  Text(title),
-          style: ElevatedButton.styleFrom(
-           shape: RoundedRectangleBorder(
-               borderRadius: BorderRadius.circular(5), 
-            ),
-          ),
-          ),
-        );
+      width: MediaQuery.of(context).size.width-45, 
+      child: ElevatedButton(onPressed: (){
+        final String isimSoyisim=adiController.text;
+        final String email=epostaController.text;
+        final String sifre=sifreController.text;
+        final String kullaniciAdi=klncadiController.text;
+        dataBase.userkayit(email,sifre,kullaniciAdi,isimSoyisim).then((value) => {
+            if(value.length==28){ //Kayit olunursa kullanıcı ID döndürülecek 
+              showMessage("Kayıt İşlemleri Başarıyla Gerçekleşti", context),
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const UserLogin()))
+          }
+          else{
+            showMessage(value, context) //Snackbar ile alttan mesaj çıkartma
+          }
+        });
+      }, child:  Text(title),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5), 
+        ),
+      ),
+      ),
+    );
   }
 
-   Widget textField(String title,TextEditingController controller) {
+   Widget textFieldCreate(String title,TextEditingController controller) { //TextField oluşturma
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: TextField(

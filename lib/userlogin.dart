@@ -34,7 +34,7 @@ class UserLogin extends StatefulWidget {
 }
 
 class _UserLoginState extends State<UserLogin> {
-  late TextEditingController topcontroller;
+  late TextEditingController emailcontroller;
   late TextEditingController passwordController;
   late bool _textState;
   late FirebaseAuth auth;
@@ -44,7 +44,7 @@ class _UserLoginState extends State<UserLogin> {
     super.initState();
     auth=FirebaseAuth.instance;
     auth.authStateChanges().listen((user) {
-      if(user==null){ 
+      if(user==null){  
         debugPrint("Oturum Kapalı");
       }
       else{
@@ -55,14 +55,14 @@ class _UserLoginState extends State<UserLogin> {
         });
       }
     });
-    topcontroller=TextEditingController();
+    emailcontroller=TextEditingController();
     passwordController=TextEditingController();
     _textState=false;
   }
   @override
-  void dispose() {
+  void dispose() { 
     super.dispose();
-    topcontroller.dispose();
+    emailcontroller.dispose();
     passwordController.dispose();
   }
   @override
@@ -72,14 +72,14 @@ class _UserLoginState extends State<UserLogin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children:  [
-              const Text("Instagram",style: TextStyle(fontSize: 50,fontFamily: "mainfont"),),
+              const Text("Instagram",style: TextStyle(fontSize: 50,fontFamily: "mainfont"),), 
               Padding( //E posta giriş
                 padding: const EdgeInsets.only(top: 20,left: 30,right: 30),
-                child: textField("Telefon, kullanıcı adı  veya eposta",topcontroller),
+                child: textField("Telefon, kullanıcı adı  veya eposta",emailcontroller),
               ),
               Padding( //Password TextBox
                 padding: const EdgeInsets.only(top: 20,left: 30,right: 30),
-                child:  textFieldpassword("Sifre",passwordController,),
+                child:  textFieldPassword("Sifre",passwordController,),
               ),
               Padding( //Sifremi unuttum
                 padding: const EdgeInsets.only(right: 20,top: 5),
@@ -93,8 +93,8 @@ class _UserLoginState extends State<UserLogin> {
               Container ( //Giriş Yap Button
                 width: 350,
                 child: ElevatedButton(onPressed: (){
-                  var a=topcontroller.text;
-                  var b=passwordController.text;
+                  String a=emailcontroller.text;
+                  String b=passwordController.text;
                   debugPrint(a+b);
                   DataBase().signIntoSystem(a, b).then((value) => {
                     if(value.length==28){
@@ -151,7 +151,7 @@ class _UserLoginState extends State<UserLogin> {
       ),
   );
   }
-  TextField textFieldpassword(String title,TextEditingController controller,) {
+  TextField textFieldPassword(String title,TextEditingController controller,) {
     return TextField(
       obscureText: _textState,
       controller: controller,

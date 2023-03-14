@@ -1,7 +1,6 @@
 import 'package:flutter_application_1/commanusage/commonfunc.dart';
 import 'package:flutter_application_1/firebase/allfirebase.dart';
 import 'package:flutter_application_1/userclass/shareclass.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import "package:flutter/material.dart";
 import 'profduzenle.dart';
 
@@ -60,8 +59,8 @@ class _MyProfileState extends State<MyProfile> {
                       },
                     )
                   ),
-                  Expanded(child: Container(child: textColumn("   2","    Gönderi",() {})),flex: 2,), //gonderi takipçi ve takip yazıları ve metotları
-                  Expanded(child: Container(child: textColumn("226","Takipçi",() {})),flex: 1,),
+                  Expanded(flex: 2,child: Container(child: textColumn("   2","    Gönderi",() {}))), //gonderi takipçi ve takip yazıları ve metotları
+                  Expanded(flex: 1,child: Container(child: textColumn("226","Takipçi",() {}))),
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -83,12 +82,12 @@ class _MyProfileState extends State<MyProfile> {
               profilbutton(size, context), //profil düzenleme ve - buttonu
               Padding( //butonun altındaki paylaşılan hikayeleren 
                 padding: const EdgeInsets.only(left: 20,right: 10),
-                child: CirclePicture("assets/modelgrid1.jpg",),
+                child: circlePicture("assets/modelgrid1.jpg",),
               ),
               Row( //2 icon kare ve add person
                 children: [
-                  Expanded(child: Center(child: IconButton(icon:Icon(Icons.border_all_sharp),onPressed: () {
-                  },)),flex: 2,),
+                  Expanded(flex: 2,child: Center(child: IconButton(icon: const Icon(Icons.border_all_sharp),onPressed: () {
+                  },)),),
                   Expanded(
                     flex: 2,
                     child: Center(child: IconButton(icon: const Icon(Icons.person_add_outlined),
@@ -145,17 +144,17 @@ class _MyProfileState extends State<MyProfile> {
       case 5:return Column(children: [karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1],data[0], "")],);    
       case 6:return Column(children: [karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2],data[1], data[0])],);
       case 7:return Column(children: [karePicture(size, data[6], data[5], data[4]),karePicture(size, data[3],data[2], data[1]),karePicture(size, data[0], "", "")],);
-      case 7:return Column(children: [karePicture(size, data[7], data[6], data[5]),karePicture(size, data[4],data[3], data[2]),karePicture(size, data[1], data[0], "")],);
-      case 8:return Column(children: [karePicture(size, data[8], data[7], data[6]),karePicture(size, data[5],data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
-      case 9:return Column(children: [karePicture(size, data[9], data[8], data[7]),karePicture(size, data[6],data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, data[0], "", "")],);
-      case 10:return Column(children: [karePicture(size, data[10], data[9], data[8]),karePicture(size, data[7],data[6], data[5]),karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1], data[0], "")],);
-      case 11:return Column(children: [karePicture(size, data[11], data[10], data[9]),karePicture(size, data[8],data[7], data[6]),karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 8:return Column(children: [karePicture(size, data[7], data[6], data[5]),karePicture(size, data[4],data[3], data[2]),karePicture(size, data[1], data[0], "")],);
+      case 9:return Column(children: [karePicture(size, data[8], data[7], data[6]),karePicture(size, data[5],data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 10:return Column(children: [karePicture(size, data[9], data[8], data[7]),karePicture(size, data[6],data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, data[0], "", "")],);
+      case 11:return Column(children: [karePicture(size, data[10], data[9], data[8]),karePicture(size, data[7],data[6], data[5]),karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1], data[0], "")],);
+      case 12:return Column(children: [karePicture(size, data[11], data[10], data[9]),karePicture(size, data[8],data[7], data[6]),karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 13:return Column(children: [karePicture(size, data[12], data[11], data[10]),karePicture(size, data[9],data[8], data[7]),karePicture(size, data[6], data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, "", "", "")],);
 
       default:return const Center(child: Text("Paylasim Yap",style: TextStyle(fontSize:18),));
      }
 
   }
-
 
   Row profilbutton(Size size, BuildContext context) {
     return Row( //profili düzenle buton
@@ -269,12 +268,12 @@ class _MyProfileState extends State<MyProfile> {
                 ),
               ),
             ),
-            Expanded(//çöp kovası icon
+            Expanded(//Çöp Kovası
               child: Card( //canlı yayın
                 elevation: 0,
                 child: ListTile(
                   onTap: () {
-                    DataBase().preofilResmiKamera(widget.myUser.ID);
+                    DataBase().preofilResmiGaleriKamera(widget.myUser.ID,galeriMi: false);
                   },
                   title: const Text("Mevcut Resmi Kaldır",style: TextStyle(color: Colors.red),),
                   leading: const Icon(Icons.delete,color: Colors.red,),
@@ -316,7 +315,7 @@ class _MyProfileState extends State<MyProfile> {
                   InkWell(child: photoandgallery(const Icon(Icons.camera_enhance),"Kamera"),
                   onTap: () {
                     debugPrint("Kamera açılıyor");
-                    DataBase().gonderiEkleKamera(widget.myUser.ID);
+                    DataBase().preofilResmiGaleriKamera(widget.myUser.ID,galeriMi: false);
                     Navigator.pop(context);
                   },
                   ),),
@@ -326,7 +325,7 @@ class _MyProfileState extends State<MyProfile> {
                   onTap: () {
                     debugPrint("-------------------------");
                     debugPrint("Galeriyi açıyoruz");
-                    DataBase().gonderiEkleGaleri(widget.myUser.ID);
+                     DataBase().preofilResmiGaleriKamera(widget.myUser.ID,galeriMi: true);
                        Navigator.pop(context);
                   },
                   ))  

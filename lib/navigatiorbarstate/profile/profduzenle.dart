@@ -72,8 +72,8 @@ class _ProfiDuzenleState extends State<ProfiDuzenle> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-          InkWell(child: CirclePicture("assets/model4.jpg")),
-          CirclePicture(""),
+          InkWell(child: circlePicture("assets/model4.jpg")),
+          circlePicture(""),
         ],),
         TextButton(onPressed: (){}, child: const Text("Resmi veya avatari düzenle")),
          _textField("Ad",adController),

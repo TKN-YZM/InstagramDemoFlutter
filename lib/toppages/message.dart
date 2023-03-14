@@ -1,8 +1,11 @@
-import "package:flutter/material.dart";
+import 'package:flutter_application_1/toppages/chatpage.dart';
 import 'package:flutter_application_1/commanusage/commonfunc.dart';
+import "package:flutter/material.dart";
+import 'package:flutter_application_1/userclass/shareclass.dart';
 
 class MessagePage extends StatefulWidget {
-  const MessagePage({super.key});
+  final UserClass myUser;
+  const MessagePage({required this.myUser,super.key});
   @override
   State<MessagePage> createState() => _MessagePageState();
 }
@@ -19,7 +22,7 @@ class _MessagePageState extends State<MessagePage> {
         actions: [
           Expanded(
             flex: 1,
-            child: InkWell(child: const Icon(Icons.arrow_back_ios_new,color: Colors.black,size: 25,),
+            child: InkWell(child: const Icon(Icons.arrow_back,color: Colors.black,size: 25,),
             onTap: () {
               Navigator.pop(context);
             },
@@ -33,13 +36,14 @@ class _MessagePageState extends State<MessagePage> {
           const Expanded(flex: 1,child: Icon(Icons.add,color: Colors.black,size: 30,)),   
         ],
       ),
-      body: const MainStructure(),
+      body:  MainStructure(myUser: widget.myUser),
     );
   }
 }
 
 class MainStructure extends StatefulWidget {
-  const MainStructure({super.key});
+  final UserClass myUser;
+  const MainStructure({required this.myUser,super.key});
   @override
   State<MainStructure> createState() => _MainStructureState();
 }
@@ -74,11 +78,11 @@ class _MainStructureState extends State<MainStructure> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: _aktifKullanici("assets/model2.jpg", "emma"),
+                  child: _aktifKullanici("assets/model1.jpg", "mr_Atl"),
                 ),
                  Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: _aktifKullanici("assets/model3.jpg", "abalcan"),
+                  child: _aktifKullanici("assets/model3.jpg", "mr_Bob"),
                 )
               ],
             ),
@@ -95,21 +99,24 @@ class _MainStructureState extends State<MainStructure> {
                   },),
                 )
                 ],),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height,
               width: double.infinity,
               child: ListView.builder(
                 primary: false,
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: ListTile(
-                        title: Text("Konuşmaci $index"),
-                        leading: const Icon(Icons.person),
-                        trailing: const Icon(Icons.camera_alt_outlined,size: 30,),
+                  return InkWell(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(myUser: widget.myUser))),
+                    child: Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ListTile(
+                          title: Text("Konuşmaci $index"),
+                          leading: const Icon(Icons.person),
+                          trailing: const Icon(Icons.camera_alt_outlined,size: 30,),
+                        ),
                       ),
                     ),
                   );
@@ -126,7 +133,7 @@ class _MainStructureState extends State<MainStructure> {
       children: [
          Stack(
           children: [
-          CirclePicture(imgPath,name: name),
+          circlePicture(imgPath,name: name),
           Positioned(
             top: 60,
             left: 60,

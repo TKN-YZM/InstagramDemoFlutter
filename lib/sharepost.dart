@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/commanusage/commonfunc.dart';
+import 'package:flutter/material.dart';
 import 'userclass/shareclass.dart';
 
 class Postshare extends StatefulWidget {
-  final UserClass myuserClass;
+  final OutherUserClass myuserClass;
   final String imgPath;
   final String circilePath;
-  final Function() onTap;
-  const Postshare({required this.imgPath,required this.myuserClass,required this.circilePath ,required this.onTap,Key? key,}):super(key: key);
+  bool networkControl=false;
+  Postshare({required this.imgPath,required this.myuserClass,required this.circilePath ,required this.networkControl,Key? key,}):super(key: key);
 
   @override
   State<Postshare> createState() => _PostshareState();
@@ -26,22 +26,22 @@ class _PostshareState extends State<Postshare> {
           color: Colors.grey.shade100,
           borderRadius: BorderRadius.circular(8)
         ),
-        child: _shareThings(context,widget.onTap), //all post
+        child: _shareThings(context), //all post
       ),
     );
   }
 
-  Widget _shareThings(context,Function() onTap){
+  Widget _shareThings(context){
     Size size=MediaQuery.of(context).size;
     return Column(
       children: [
         Row( // Top photo / username / time and share icon
           children: [
-            sharePicture(widget.circilePath), //share user photo
+             sharePicture(widget.circilePath), //share user photo
             Stack(
               children: [
                 shareUserText(widget.myuserClass.kullaniciAdi), //share of user name
-                Positioned(child: shareTime("7 Dk Önce"),top: 28), //share of time
+                Positioned(top: 28,child: shareTime("7 Dk Önce"),), //share of time
               ],
             ),
             Padding(
@@ -53,8 +53,8 @@ class _PostshareState extends State<Postshare> {
         Row( //main post page
           children: [
             Expanded(child: InkWell(
-              onTap: onTap,
-              child: Container(height: 400,width: 300,child: Image.asset(widget.imgPath,fit: BoxFit.cover,))))
+              child: Container(height: 400,width: 300,child: widget.networkControl==false? Image.asset(widget.imgPath,fit: BoxFit.cover,):Image.network(widget.imgPath,fit: BoxFit.cover,)),
+              ))
           ],
         ),
         const SizedBox(height: 20),
@@ -65,7 +65,7 @@ class _PostshareState extends State<Postshare> {
             const SizedBox(width: 25),
             iconcreate(Icons.mode_comment_outlined,(){
               showModalBottomSheet(
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(10)
                   )
@@ -78,8 +78,7 @@ class _PostshareState extends State<Postshare> {
                       controller: scrollController,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                      
+                      children: [               
                        Container(
                         height: 320,
                         child: Column(
@@ -103,7 +102,7 @@ class _PostshareState extends State<Postshare> {
                           ],
                         ),
                        ),
-                        InkWell(
+                       InkWell(
                           child: Card(color: Colors.transparent,elevation: 0,child: mesajCard("assets/blue.jpg","_ahmetfar","Tebrikler! Kendine güven ve başarıya odaklan"))),
                         Card(color: Colors.transparent,elevation: 0,child: mesajCard("assets/model1.jpg","_ahmetfar","You are real hero!")),
                         Card(color: Colors.transparent,elevation: 0,child: mesajCard("assets/bluemodel.jpg","_ahmetfar","Küçük bir başarı, daha iyisini bekleriz")),
@@ -192,10 +191,10 @@ class _PostshareState extends State<Postshare> {
         width: 350,
         child: Row(
           children: [
-            Expanded(flex: 2,child: CirclePicture(imgPath,height: 48,widht: 60)),
+            Expanded(flex: 2,child: circlePicture(imgPath,height: 48,widht: 60)),
             Expanded(flex: 5,child: Stack(
             children: [
-              Text(genelIsim,style: TextStyle(fontWeight: FontWeight.w500),),
+              Text(genelIsim,style: const TextStyle(fontWeight: FontWeight.w500),),
               Padding(
                 padding: const EdgeInsets.only(top: 19),
                 child: Text(kullaniciAdi),
@@ -222,7 +221,7 @@ class _PostshareState extends State<Postshare> {
           flex: 2,
           child: Padding(
             padding: const EdgeInsets.only(top: 10,left: 5),
-            child: CirclePicture(imgPath,height: 40,widht: 40),
+            child: circlePicture(imgPath,height: 40,widht: 40),
           ),
         ),
         Expanded( //Kişi ismi,mesaj gönderi ve yanıtla
@@ -231,33 +230,33 @@ class _PostshareState extends State<Postshare> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 60),
-                child: Text(kisiIsmi,style: TextStyle(fontWeight:  FontWeight.w500),),
+                child: Text(kisiIsmi,style: const TextStyle(fontWeight:  FontWeight.w500),),
               ),
               Padding(
-                padding:  EdgeInsets.only(top: 20),
-                child: Text(mesaj,style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+                padding:  const EdgeInsets.only(top: 20),
+                child: Text(mesaj,style: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
               ),
               gondericiKontrol==false?
               Row(
-                children: [
+                children: const [
                   Padding(
-                  padding: const EdgeInsets.only(top:60,right: 10),
+                  padding:  EdgeInsets.only(top:60,right: 10),
                   child: Text("Yanıtla"),
                 ) ,Padding(
-                  padding: const EdgeInsets.only(top: 60),
+                  padding:  EdgeInsets.only(top: 60),
                   child: Text("Gönder"),
                 ) 
                 ],
               ):
-              SizedBox(height: 0,width: 0,)
+              const SizedBox(height: 0,width: 0,)
                
             ],
           ),
         ),
-        Expanded(
+        const Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.only(right: 20,bottom: 20,),
+            padding: EdgeInsets.only(right: 20,bottom: 20,),
             child: Icon(Icons.favorite,color: Colors.black26,),
           )),                     
       ],
@@ -276,13 +275,14 @@ class _PostshareState extends State<Postshare> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-            width: 50,height: 50,  
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: Colors.white,
-                image:  DecorationImage(image: AssetImage(imgPath),
-                fit: BoxFit.cover)
-              ),
+          width: 50,height: 50,  
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: Colors.white,
+              image: widget.networkControl==false? DecorationImage(image: AssetImage(imgPath),
+              fit: BoxFit.cover):DecorationImage(image: NetworkImage(imgPath),
+              fit: BoxFit.cover)
+            ),
         ),
     );
   }

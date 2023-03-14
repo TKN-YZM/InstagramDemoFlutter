@@ -17,7 +17,6 @@ class _PicturePageState extends State<PicturePage> {
    Color arkaplan_rengi=Colors.white;
    @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ColorState(widget.imgPath);
   }
@@ -31,7 +30,7 @@ class _PicturePageState extends State<PicturePage> {
         child: InkWell(
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMainApp(myUser: widget.myUser))),
           child: Container(
-            color: Colors.transparent,
+            color: arkaplan_rengi,
             height: size.height,
             width: size.width,
             child: Image.asset(widget.imgPath),

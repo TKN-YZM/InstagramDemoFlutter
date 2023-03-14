@@ -7,7 +7,6 @@ class DiscoverPage extends StatelessWidget {
   const DiscoverPage({required this.myUser,super.key});
   @override
   Widget build(BuildContext context) {
-    Size size=MediaQuery.of(context).size;
     return ListView(
         children: [
          Padding(

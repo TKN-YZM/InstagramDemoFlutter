@@ -16,3 +16,19 @@ class OutherUserClass{
   OutherUserClass(this.ID, this.kullaniciAdi, this.kullaniciGenelAdi, this.genelOzellik);
   
 }
+
+class ShareUserOnPost{
+  final Function() onCommentTap;
+  final Function() onShareTap;
+  final Function() onSaveTap;
+  final Function() onLikeTap;
+  final String imgPath;
+  final OutherUserClass userClass;
+  final String circilePath;
+
+  ShareUserOnPost(this.onCommentTap, this.onShareTap, this.onSaveTap, this.onLikeTap, this.imgPath, this.userClass, this.circilePath);
+
+}
+
+
+
