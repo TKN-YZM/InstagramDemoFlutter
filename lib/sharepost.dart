@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/commanusage/commonfunc.dart';
 import 'userclass/shareclass.dart';
@@ -64,7 +63,7 @@ class _PostshareState extends State<Postshare> {
           children: [
             iconcreate(Icons.favorite_border_rounded,(){},), 
             const SizedBox(width: 25),
-            iconcreate(Icons.message_outlined,(){
+            iconcreate(Icons.mode_comment_outlined,(){
               showModalBottomSheet(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
@@ -115,7 +114,7 @@ class _PostshareState extends State<Postshare> {
               }));
             }),
             const SizedBox(width: 25),
-            iconcreate(Icons.north_east,(){
+            iconcreate(Icons.near_me_sharp,(){
                showModalBottomSheet(
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
@@ -177,7 +176,10 @@ class _PostshareState extends State<Postshare> {
                   ));
               }));
             }), 
-        
+            Padding(
+              padding: const EdgeInsets.only(left: 130),
+              child: iconcreate(Icons.turned_in, () => null),
+            )
           ]
         )
       ],

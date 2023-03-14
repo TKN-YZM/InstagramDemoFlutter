@@ -59,21 +59,21 @@ import 'package:flutter/material.dart';
        Expanded(
         flex: 1,
         child: Container(
-          child:pictures(size,imgPath1),
+          child:imgPath1==""? const Text(""):pictures(size,imgPath1),
         ),
       ),
         const SizedBox(width: 3),
        Expanded(
         flex: 1,
          child: Container(
-           child:pictures(size,imgPath2),
+           child:imgPath2==""? const Text(""):pictures(size,imgPath2),
              ),
        ),
       const SizedBox(width: 3,),
        Expanded(
         flex: 1,
          child: Container(
-           child:pictures(size,imgPath3),
+           child: imgPath3==""? const Text(""):pictures(size,imgPath3),
              ),
        )
           ],

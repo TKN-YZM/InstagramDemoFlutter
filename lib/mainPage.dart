@@ -1,3 +1,4 @@
+
 import 'package:flutter_application_1/pictureShow.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'commanusage/commonfunc.dart';
@@ -17,10 +18,12 @@ class MainStructurePage extends StatefulWidget {
 
 class _MainStructureState extends State<MainStructurePage> {
   List<String> myPhotoList=[];
+
   String userimgPath="";
   @override
   void initState() {
     super.initState();
+    
   }
   @override
   Widget build(BuildContext context) {
@@ -33,25 +36,21 @@ class _MainStructureState extends State<MainStructurePage> {
           child: ListView( 
             scrollDirection: Axis.horizontal,
             children: [ 
+              hikayeCard(widget.myUser.ID,widget.myUser.kullaniciAdi),
               FutureBuilder(
-                future: DataBase().takeUserPhoto(widget.myUser.ID),
+                future: DataBase().usersID(widget.myUser.ID),
                 builder: ((context, snapshot) {
-                  if(snapshot.connectionState==ConnectionState.done && snapshot.hasData){
-                    if(snapshot.data==""){
-                      return InkWell(
-                        child: CirclePicture("",name: widget.myUser.kullaniciAdi,hikayeKontrol: true),
-                        onLongPress: () => _message(context),
-                        onTap: () => _message(context),
-                        );
-                    }
-                    else{
-                        return futureYapi(snapshot.data!);
-                    }
+                if(snapshot.connectionState==ConnectionState.done && snapshot.hasData){
+                  if(snapshot.hasData==""){
+                    return CirclePicture("",name: "huğğğğ");
+                  }
+                  else{
+                    debugPrint(snapshot.data![0].toString());
+                    return hikayeCard(snapshot.data![0],"aaaaa");
+                  }
                 }
-                else{
-                return const CircularProgressIndicator();
-                }
-              })),
+                else return CirclePicture("",name: "huğğğğ");
+              })), 
               InkWell(
                 child: CirclePicture("assets/modelgrid1.jpg",name: "mr.robo",)),
               CirclePicture("assets/bluemodel.jpg",name: "tuna_bal"),
@@ -73,9 +72,31 @@ class _MainStructureState extends State<MainStructurePage> {
     );
   }
 
-  FutureBuilder<String> futureYapi(String imgPath) {
+  FutureBuilder<String> hikayeCard(String id,String userName) {
     return FutureBuilder(
-      future: DataBase().takeUserHistoryPersonal(widget.myUser.ID),
+        future: DataBase().takeUserPhoto(id),
+        builder: ((context, snapshot) {
+          if(snapshot.connectionState==ConnectionState.done && snapshot.hasData){
+            if(snapshot.data==""){
+              return InkWell(
+                child: CirclePicture("",name: userName,hikayeKontrol: true),
+                onLongPress: () => _message(context),
+                onTap: () => _message(context),
+                );
+            }
+            else{
+                return futureYapi(snapshot.data!,id);
+            }
+        }
+        else{
+        return const CircularProgressIndicator();
+        }
+      }));
+  }
+
+  FutureBuilder<String> futureYapi(String imgPath,String id) {
+    return FutureBuilder(
+      future: DataBase().takeUserHistoryPersonal(id),
       builder: ((context, snapshot) {
       if(snapshot.connectionState==ConnectionState.done && snapshot.hasData){
           if(snapshot.data=="" || snapshot.data==null){
@@ -85,11 +106,18 @@ class _MainStructureState extends State<MainStructurePage> {
               );
           }
           else{
+            String ID="",isim="",userisim="",genelOzellik="";
+            DataBase().kullaniciOzellik(id).then((value) => {
+              ID=value.ID,
+              isim=value.kullaniciAdi,
+              userisim=value.kullaniciGenelAdi,
+              genelOzellik=value.genelOzellik
+            });
             return Hero(
-            tag: "one",
+            tag: UniqueKey(),
             child: InkWell(child: CirclePictureNetwork(imgPath,name: "Hikayen"),
             onLongPress: () => _message(context),
-            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => HistoryPicturePage(myUser: widget.myUser, imagePath: snapshot.data!))),),
+            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => HistoryPicturePage(myUser: widget.myUser,outherUser: OutherUserClass(ID,isim,genelOzellik,genelOzellik),imagePath: snapshot.data!))),),
           );
         }
       }
@@ -150,14 +178,14 @@ class _MainStructureState extends State<MainStructurePage> {
                                 InkWell(child: photoandgallery(const Icon(Icons.camera_enhance),"Kamera"),
                                 onTap: () {
                                   debugPrint("Kamera açılıyor");
-                                  DataBase().cameraOpen(widget.myUser.ID);
+                                  DataBase().preofilResmiKamera(widget.myUser.ID);
                                 },
                                 ),),
                                 Expanded(
                                 flex: 1,
                                 child: InkWell(child: photoandgallery(const Icon(Icons.photo),"Galeri"),
                                 onTap: () {
-                                  DataBase().galleryOpen(widget.myUser.ID);
+                                  DataBase().profilResmiGaleri(widget.myUser.ID);
                                 },
                                 ))  
                               ],
@@ -184,6 +212,7 @@ class _MainStructureState extends State<MainStructurePage> {
       ),
     );
   }
+
   Column photoandgallery(Icon icon,String text) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +222,4 @@ class _MainStructureState extends State<MainStructurePage> {
       ],
     );
   }
-
-
-  
 }

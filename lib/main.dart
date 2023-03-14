@@ -64,7 +64,7 @@ class _topPageState extends State<topPage>{
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          Expanded(
+          Expanded( //Insta yazisi
             flex: expandedStateCount,
             child: Padding(
             padding: const  EdgeInsets.only(top: 10,left: 10),
@@ -73,7 +73,7 @@ class _topPageState extends State<topPage>{
               return deger;
             })),
           ),),
-          Expanded(
+          Expanded( //reels icon
             flex: 1,
             child: InkWell(
               onTap: () {
@@ -84,11 +84,17 @@ class _topPageState extends State<topPage>{
             }))
             ),
           ),
-          Expanded(flex: 0,child: InkWell(child: Consumer(builder: ((context, ref, child) {
+          Expanded(flex: 0,child: InkWell( //kalp 
+            onTap: () {
+              DataBase().usersID(widget.myUser.ID).then((value) => {
+                value.forEach((element) {debugPrint(element.toString());})
+              });
+            },
+            child: Consumer(builder: ((context, ref, child) {
               return ref.watch(instaIconFavorite); 
             }))
             ),),
-          Expanded(
+          Expanded( //message
             flex: 1,
             child: 
             InkWell(child: Consumer(builder: ((context, ref, child) {
@@ -109,69 +115,85 @@ class _topPageState extends State<topPage>{
       )
     );
   }
- _message(context) {
-   showMaterialModalBottomSheet(
-  context: context,
-  builder: (context) => SingleChildScrollView(
-    controller: ModalScrollController.of(context),
-    child: Container(
-      color: Colors.white,
-      height: 220,
-      child: Column(
-        children: [
-          Row( //--- çizgisi
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 3,
-                  width: 40,
-                  color: Colors.black,
-                ),
-              )
-            ],
-          ),
-          Card( //gönderi ekle
-            elevation: 0,
-            child: ListTile(
-              title: const Text("Gönderi Ekle"),
-              leading: const Icon(Icons.rule_folder_outlined),
-              onTap: () {
-                camandgalery(context);
-              },
-            ),
-          ),
-          Card( //reels videosu ekle
-            elevation: 0,
-            child: ListTile(
-              title: const Text("Reels Videosu Ekle"),
-              leading: const Icon(Icons.movie_filter_outlined),
-              onTap: () {
-                camandgalery(context);
-              },
-            ),
-          ),
-          Card( //canlı yayın
-            elevation: 0,
-            child: ListTile(
-              onTap: () {
-                DataBase().cameraOpen(widget.myUser.ID);
-              },
-              title: const Text("Canlı Yayın",style: TextStyle(color: Colors.red),),
-              leading: const Icon(Icons.live_tv,color: Colors.red,),
-            ),
-          ),
-        ],
+   _message(context) {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20)
+        )
       ),
-    )
-  ),);
+      isScrollControlled: true,
+      context: context, builder: ((context) {
+        return  FractionallySizedBox(
+        heightFactor: 0.3,
+        child: Column(
+          children: [
+            Row( //--- çizgisi
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 3,
+                    width: 40,
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
+            Expanded(//galeri icon
+              child: Card( //gönderi ekle
+                elevation: 0,
+                child: ListTile(
+                  title: const Text("Gönderi Yayınla"),
+                  leading: const Icon(Icons.rule_folder_outlined),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _camandgalery(context);
+                  },
+                ),
+              ),
+            ),
+            Expanded(//facebook icon
+              child: Card( //reels videosu ekle
+                elevation: 0,
+                child: ListTile(
+                  title: const Text("Reels Videosu Oluştur"),
+                  leading: const Icon(Icons.movie_outlined),
+                  onTap: () {
+                    _camandgalery(context);
+                  },
+                ),
+              ),
+            ),
+            Expanded(//çöp kovası icon
+              child: Card( //canlı yayın
+                elevation: 0,
+                child: ListTile(
+                  onTap: () {
+                    DataBase().preofilResmiKamera(widget.myUser.ID);
+                  },
+                  title: const Text("Canlı Yayın Yap",style: TextStyle(color: Colors.red),),
+                  leading: const Icon(Icons.abc,color: Colors.red,),
+                ),
+              ),
+            ),
+          ],
+        ),
+    );}));   
   }
- Future<dynamic> camandgalery(BuildContext context) {
-   return showMaterialModalBottomSheet( //galeri veya kamera seçeneği
-      context: context,
-      builder: (context) => SingleChildScrollView(
-      child: Container(
+   _camandgalery(context){
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20)
+        )
+      ),
+      isScrollControlled: true,
+      context: context, builder: ((context) {
+        return  FractionallySizedBox(
+        heightFactor: 0.3,
+        child: Container(
         height: 220,
         child: Column( //kamera ve ---- yapısı
           children: [
@@ -190,14 +212,20 @@ class _topPageState extends State<topPage>{
                   InkWell(child: photoandgallery(const Icon(Icons.camera_enhance),"Kamera"),
                   onTap: () {
                     debugPrint("Kamera açılıyor");
-                    DataBase().cameraOpen(widget.myUser.ID);
+                    DataBase().gonderiEkleKamera(widget.myUser.ID).then((value) => {
+                      
+                    });
+                    Navigator.pop(context);
                   },
                   ),),
                   Expanded(
                   flex: 1,
                   child: InkWell(child: photoandgallery(const Icon(Icons.photo),"Galeri"),
                   onTap: () {
-                    DataBase().galleryOpen(widget.myUser.ID);
+                    debugPrint("-------------------------");
+                    debugPrint("Galeriyi açıyoruz");
+                    DataBase().gonderiEkleGaleri(widget.myUser.ID);
+                       Navigator.pop(context);
                   },
                   ))  
                 ],
@@ -206,9 +234,12 @@ class _topPageState extends State<topPage>{
           ],
         ),
       ),
-      ),
+      );
+      }),
     );
- }
+  }
+
+
  Column photoandgallery(Icon icon,String text) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -68,6 +68,67 @@ class DataBase{
     }
   }
 
+  Future<List> usersID(String id) async {
+     try{
+      //var userDoc=await store.collection("Users").get();
+      var userData=await store.doc("Users/$id").get();
+      //debugPrint(userData["Users"].toString());
+      return userData["Users"];
+    }
+    catch(e){
+      debugPrint("Hata aldık");
+      debugPrint(e.toString());
+      return []; //UserClass("1","", "", "");
+    }
+  }
+  
+  Future<String> gonderiEkleGaleri(String id) async{
+    try{
+    File yuklenecekDosya;
+    var alinanDosya=await ImagePicker().pickImage(source: ImageSource.gallery);
+    if(alinanDosya== null){
+      return "";
+    }
+    else{
+      yuklenecekDosya=File(alinanDosya.path);
+      ListResult result=await FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").listAll();
+      int dataLength=result.items.length+1;
+      var data=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$dataLength.jpg");
+      var gorev=data.putFile(yuklenecekDosya);
+      var url=data.getDownloadURL();
+      debugPrint(url.toString());
+      return url;
+    }   
+    }
+    catch(e){
+      return "Hata";
+    }
+  }
+
+  Future<String> gonderiEkleKamera(String id) async{
+    FirebaseStorage stor=FirebaseStorage.instance;
+    try{
+    File yuklenecekDosya;
+    var alinanDosya=await ImagePicker().pickImage(source: ImageSource.camera);
+    if(alinanDosya== null){
+      return "";
+    }
+    else{
+      yuklenecekDosya=File(alinanDosya.path);
+      ListResult result=await stor.ref().child("profilresimleri").child(id).child("Paylasimlar").listAll();
+      int dataLength=result.items.length+1;
+      var data=stor.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$dataLength.jpg");
+      var gorev=data.putFile(yuklenecekDosya);
+      var url=data.getDownloadURL();
+      debugPrint(url.toString());
+      return url;
+    }   
+    }
+    catch(e){
+      return "Hata";
+    }
+  }
+
   Future<String> veriEkleme(String id,String KullaniciAdi,String IsimSoyisim,String yeniOzellik) async{
     try{
 
@@ -86,7 +147,7 @@ class DataBase{
     await auth.signOut();
   }
 
-  Future<String> cameraOpen(String id) async{
+  Future<String> preofilResmiKamera(String id) async{
     try{
       File yuklenecekDosya;
       var alinanDosya=await ImagePicker().pickImage(source: ImageSource.camera);
@@ -107,7 +168,7 @@ class DataBase{
     }
   }
 
-  Future<String> galleryOpen(String id) async{
+  Future<String> profilResmiGaleri(String id) async{
     try{
     File yuklenecekDosya;
     var alinanDosya=await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -141,8 +202,10 @@ class DataBase{
 
   Future<List> takeUserAllPhoto(String id) async {
     List<String> myList=[];
+    ListResult result=await FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").listAll();
+    int data=result.items.length;
     try{
-      for(int i=2;i<6;i++){
+      for(int i=1;i<=data;i++){
          var ref=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Paylasimlar").child("$i.jpg");
           String getDownloadURL= await ref.getDownloadURL();
          myList.add(getDownloadURL);
@@ -170,6 +233,7 @@ class DataBase{
         return [];
       }
     }
+
   Future<String> takeUserHistoryPersonal(String id) async {
       try{
          var ref=FirebaseStorage.instance.ref().child("profilresimleri").child(id).child("Hikayeler").child("1.jpg");

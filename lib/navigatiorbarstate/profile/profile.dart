@@ -110,7 +110,7 @@ class _MyProfileState extends State<MyProfile> {
                         return Container();
                       }
                       else{
-                        return karePicture(size,snapshot.data![0],snapshot.data![1],snapshot.data![2]);
+                        return _paylasimKontrol((snapshot.data!),size);
                       }
                     }
                     else{
@@ -135,6 +135,27 @@ class _MyProfileState extends State<MyProfile> {
         ],
       );
   }
+  Widget _paylasimKontrol(List data,size){
+     debugPrint(data.length.toString());
+     switch(data.length){ 
+      case 1:return karePicture(size,data[0] , "", ""); 
+      case 2:return karePicture(size,data[0] , data[1], "");
+      case 3:return karePicture(size, data[0], data[1], data[2]);
+      case 4:return  Column(children: [karePicture(size, data[3], data[2], data[1]),karePicture(size, data[0],"", "")],);
+      case 5:return Column(children: [karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1],data[0], "")],);    
+      case 6:return Column(children: [karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2],data[1], data[0])],);
+      case 7:return Column(children: [karePicture(size, data[6], data[5], data[4]),karePicture(size, data[3],data[2], data[1]),karePicture(size, data[0], "", "")],);
+      case 7:return Column(children: [karePicture(size, data[7], data[6], data[5]),karePicture(size, data[4],data[3], data[2]),karePicture(size, data[1], data[0], "")],);
+      case 8:return Column(children: [karePicture(size, data[8], data[7], data[6]),karePicture(size, data[5],data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+      case 9:return Column(children: [karePicture(size, data[9], data[8], data[7]),karePicture(size, data[6],data[5], data[4]),karePicture(size, data[3], data[2], data[1]),karePicture(size, data[0], "", "")],);
+      case 10:return Column(children: [karePicture(size, data[10], data[9], data[8]),karePicture(size, data[7],data[6], data[5]),karePicture(size, data[4], data[3], data[2]),karePicture(size, data[1], data[0], "")],);
+      case 11:return Column(children: [karePicture(size, data[11], data[10], data[9]),karePicture(size, data[8],data[7], data[6]),karePicture(size, data[5], data[4], data[3]),karePicture(size, data[2], data[1], data[0])],);
+
+      default:return const Center(child: Text("Paylasim Yap",style: TextStyle(fontSize:18),));
+     }
+
+  }
+
 
   Row profilbutton(Size size, BuildContext context) {
     return Row( //profili düzenle buton
@@ -206,20 +227,120 @@ class _MyProfileState extends State<MyProfile> {
       ),
       isScrollControlled: true,
       context: context, builder: ((context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          builder: (context, scrollController) => SingleChildScrollView(
-          //controller: scrollController,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              
-             
-            ],
-          ),
-        ));
-  }));
-}
+        return  FractionallySizedBox(
+        heightFactor: 0.3,
+        child: Column(
+          children: [
+            Row( //--- çizgisi
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 3,
+                    width: 40,
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
+            Expanded(//galeri icon
+              child: Card( //gönderi ekle
+                elevation: 0,
+                child: ListTile(
+                  title: const Text("Yeni Profil Resmi"),
+                  leading: const Icon(Icons.rule_folder_outlined),
+                  onTap: () {
+                    Navigator.pop(context);
+                    camandgalery(context);
+                  },
+                ),
+              ),
+            ),
+            Expanded(//facebook icon
+              child: Card( //reels videosu ekle
+                elevation: 0,
+                child: ListTile(
+                  title: const Text("Facebook'tan Aktar"),
+                  leading: const Icon(Icons.facebook),
+                  onTap: () {
+                    camandgalery(context);
+                  },
+                ),
+              ),
+            ),
+            Expanded(//çöp kovası icon
+              child: Card( //canlı yayın
+                elevation: 0,
+                child: ListTile(
+                  onTap: () {
+                    DataBase().preofilResmiKamera(widget.myUser.ID);
+                  },
+                  title: const Text("Mevcut Resmi Kaldır",style: TextStyle(color: Colors.red),),
+                  leading: const Icon(Icons.delete,color: Colors.red,),
+                ),
+              ),
+            ),
+          ],
+        ),
+    );}));   
+  }
+
+  camandgalery(context){
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20)
+        )
+      ),
+      isScrollControlled: true,
+      context: context, builder: ((context) {
+        return  FractionallySizedBox(
+        heightFactor: 0.3,
+        child: Container(
+        height: 220,
+        child: Column( //kamera ve ---- yapısı
+          children: [
+            Padding( //üstteki --- 
+              padding: const EdgeInsets.all(8.0),
+              child: Container(height: 3,width: 40,color: Colors.black,),
+            ),
+            Padding( //kamera ve galeri
+              padding: const EdgeInsets.only(top: 70),
+              child: Row( 
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                  flex: 1,
+                  child: 
+                  InkWell(child: photoandgallery(const Icon(Icons.camera_enhance),"Kamera"),
+                  onTap: () {
+                    debugPrint("Kamera açılıyor");
+                    DataBase().gonderiEkleKamera(widget.myUser.ID);
+                    Navigator.pop(context);
+                  },
+                  ),),
+                  Expanded(
+                  flex: 1,
+                  child: InkWell(child: photoandgallery(const Icon(Icons.photo),"Galeri"),
+                  onTap: () {
+                    debugPrint("-------------------------");
+                    debugPrint("Galeriyi açıyoruz");
+                    DataBase().gonderiEkleGaleri(widget.myUser.ID);
+                       Navigator.pop(context);
+                  },
+                  ))  
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+      );
+      }),
+    );
+  }
+
   Column photoandgallery(Icon icon,String text) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
