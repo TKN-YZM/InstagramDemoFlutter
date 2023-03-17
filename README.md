@@ -10,6 +10,7 @@
  <li>Veritabanı üye kayıt/üye sorgulama işlemleri</li>
  <li>Kullanıcıya ve arkadaşlara ait profil sayfaları</li>
  <li>Kullanıcıya ve arkadaşlara ait resimler,gönderi ve hikaye resimleri</li>
- <li>Kullanıcı bilgi düzenleme işlemleri</li>
+ <li>Kullanıcı bilgi düzenleme sayfası</li>
  <li>Kullanıcıya ve arkadaşlara ait resimler,gönderi ve hikaye resimleri</li>
+ <li>Keşfet ve mesajlaşma sayfa tasarımı</li>
  </ul>
