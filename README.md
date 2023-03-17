@@ -11,5 +11,5 @@
  <li>Kullanıcıya ve arkadaşlara ait profil sayfaları</li>
  <li>Kullanıcıya ve arkadaşlara ait resimler,gönderi ve hikaye resimleri ve temel bilgiler</li>
  <li>Kullanıcı bilgi düzenleme sayfası</li>
- <li>Keşfet ve mesajlaşma sayfa tasarımı</li>
+ <li>Keşfet ve mesajlaşma sayfaları (temel tasarım)</li>
  </ul>
