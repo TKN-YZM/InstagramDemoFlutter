@@ -9,8 +9,7 @@
  <li>Login Sayfası (Yeni Üye Kayıt,Giriş Yap)</li>
  <li>Veritabanı üye kayıt/üye sorgulama işlemleri</li>
  <li>Kullanıcıya ve arkadaşlara ait profil sayfaları</li>
- <li>Kullanıcıya ve arkadaşlara ait resimler,gönderi ve hikaye resimleri</li>
+ <li>Kullanıcıya ve arkadaşlara ait resimler,gönderi ve hikaye resimleri ve temel bilgiler</li>
  <li>Kullanıcı bilgi düzenleme sayfası</li>
- <li>Kullanıcıya ve arkadaşlara ait resimler,gönderi ve hikaye resimleri</li>
  <li>Keşfet ve mesajlaşma sayfa tasarımı</li>
  </ul>
