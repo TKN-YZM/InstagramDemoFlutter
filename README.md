@@ -1,4 +1,4 @@
-# Instagram Demo Flutter
+ # Temel Instagram Uygulaması
 
 <img src="mian.png" height="400">
  
