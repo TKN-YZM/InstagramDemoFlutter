@@ -1,4 +1,4 @@
- # Temel Instagram Uygulaması
+ # Instagram Uygulaması
 
 <img src="mian.png" height="400">
  
